@@ -1,4 +1,23 @@
 // Script.js
+window.addEventListener('DOMContentLoaded', () => {
+  // TODO
+  let currentStorage = window.localStorage;
+  if (!currentStorage.getItem('products')) {
+    fetch('https://fakestoreapi.com/products')
+      .then(response => response.json())
+      .then(data => {
+        currentStorage.setItem('products', JSON.stringify(data));
+        const products = JSON.parse(currentStorage.getItem('products'));
+        loadProduct(products);
+      })
+      .catch(error => {
+        console.error('There has been a problem with your fetch operation:', error);
+      });
+  } else {
+    const products = JSON.parse(currentStorage.getItem('products'));
+    loadProduct(products);
+  }
+});
 
 function update(elem) {
   const shadow = elem.shadowRoot;
@@ -17,66 +36,42 @@ function update(elem) {
 }
 
 function addItem(elem) {
-  let myStorage = window.localStorage;
-  if (!myStorage.getItem('cart')) {
+  let currentStorage = window.localStorage;
+  if (!currentStorage.getItem('cart')) {
     cart = [elem.getAttribute('data-id')]
-    myStorage.setItem('cart', JSON.stringify(cart));
+    currentStorage.setItem('cart', JSON.stringify(cart));
   } else {
-    cart = JSON.parse(myStorage.getItem('cart'));
+    cart = JSON.parse(currentStorage.getItem('cart'));
     cart.push(elem.getAttribute('data-id'))
-    myStorage.setItem('cart', JSON.stringify(cart));
+    currentStorage.setItem('cart', JSON.stringify(cart));
   }
 }
 
 function removeItem(elem) {
-  let myStorage = window.localStorage;
-  if (!myStorage.getItem('cart')) {
+  let currentStorage = window.localStorage;
+  if (!currentStorage.getItem('cart')) {
   } else {
-    cart = JSON.parse(myStorage.getItem('cart'));
+    cart = JSON.parse(currentStorage.getItem('cart'));
     cart.forEach(item => {
       if (item === elem.getAttribute('data-id').toString()) {
         cart.splice(cart.indexOf(item), 1);
         return
       }
     })
-    myStorage.setItem('cart', JSON.stringify(cart));
+    currentStorage.setItem('cart', JSON.stringify(cart));
   }
 }
 
+function loadProduct(products) {
+  //load fetched product
+  products.forEach(product => {
+    let temp = document.createElement('product-item');
+    temp.setAttribute('price', '$' + product.price);
+    temp.setAttribute('title', product.title);
+    temp.setAttribute('img', product.image);
+    temp.setAttribute('alt', product.title);
+    temp.setAttribute('data-id', product.id)
+    document.getElementById('product-list').appendChild(temp);
+  })
+}
 
-window.addEventListener('DOMContentLoaded', () => {
-  // TODO
-  let myStorage = window.localStorage;
-  if (!myStorage.getItem('products')) {
-    fetch('https://fakestoreapi.com/products')
-      .then(response => response.json())
-      .then(data => {
-        myStorage.setItem('products', JSON.stringify(data));
-        const products = JSON.parse(myStorage.getItem('products'));
-        products.forEach(product => {
-          let temp = document.createElement('product-item');
-          temp.setAttribute('price', '$' + product.price);
-          temp.setAttribute('title', product.title);
-          temp.setAttribute('img', product.image);
-          temp.setAttribute('alt', product.title);
-          temp.setAttribute('data-id', product.id)
-          document.getElementById('product-list').appendChild(temp);
-        })
-      })
-      .catch(error => {
-        console.error('There has been a problem with your fetch operation:', error);
-      });
-  } else {
-    const products = JSON.parse(myStorage.getItem('products'));
-    products.forEach(product => {
-      let temp = document.createElement('product-item');
-      temp.setAttribute('price', '$' + product.price);
-      temp.setAttribute('title', product.title);
-      temp.setAttribute('img', product.image);
-      temp.setAttribute('alt', product.title);
-      temp.setAttribute('data-id', product.id)
-      document.getElementById('product-list').appendChild(temp);
-    })
-  }
-
-});

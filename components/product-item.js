@@ -5,22 +5,23 @@ class ProductItem extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
-    const wrapper = document.createElement('li');
-    wrapper.setAttribute('class', 'product');
-    const pic = wrapper.appendChild(document.createElement('img'));
+    let shadow = this.shadowRoot;
+    const list = document.createElement('li');
+    list.setAttribute('class', 'product');
+    const pic = list.appendChild(document.createElement('img'));
 
     pic.setAttribute('width', 200);
 
-    const title = wrapper.appendChild(document.createElement('p'));
+    const title = list.appendChild(document.createElement('p'));
     title.setAttribute('class', 'title');
 
-    const price = wrapper.appendChild(document.createElement('p'));
+    const price = list.appendChild(document.createElement('p'));
     price.setAttribute('class', 'price');
 
 
-    const add = wrapper.appendChild(document.createElement('button'));
-    add.setAttribute('onclick', "alert('Added to Cart!')");
-    add.addEventListener('click', event => {
+    const button = list.appendChild(document.createElement('button'));
+    button.setAttribute('onclick', "alert('Added to Cart!')");
+    button.addEventListener('click', event => {
       let element = event.target;
       if (element.textContent === 'Add to Cart') {
         element.textContent = 'Remove from Cart'
@@ -40,67 +41,76 @@ class ProductItem extends HTMLElement {
         removeItem(this);
       }
     })
-    add.textContent = 'Add to Cart';
+    button.textContent = 'button to Cart';
 
-    const style = document.createElement('style');
-    style.textContent = '.price {' +
-      'color: green;' +
-      'font-size: 1.8em;' +
-      'font-weight: bold;' +
-      'margin: 0;' +
-      '}' +
-      '.product {' +
-      'align-items: center;' +
-      'background-color: white;' +
-      'border-radius: 5px;' +
-      'display: grid;' +
-      'grid-template-areas: ' +
-      "'image'" +
-      "'title'" +
-      "'price'" +
-      "'add';" +
-      'grid-template-rows: 67% 11% 11% 11%;' +
-      'height: 450px;' +
-      'filter: drop-shadow(0px 0px 6px rgb(0,0,0,0.2));' +
-      'margin: 0 30px 30px 0;' +
-      'padding: 10px 20px;' +
-      'width: 200px;' +
-      '}' +
-      '.product > button {' +
-      'background-color: rgb(255, 208, 0);' +
-      'border: none;' +
-      'border-radius: 5px;' +
-      'color: black;' +
-      'justify-self: center;' +
-      'max-height: 35px;' +
-      'padding: 8px 20px;' +
-      'transition: 0.1s ease all;' +
-      '}' +
-      '.product > button:hover {' +
-      'background-color: rgb(255, 166, 0);' +
-      'cursor: pointer;' +
-      'transition: 0.1s ease all;' +
-      '}' +
-      '.product > img {' +
-      'align-self: center;' +
-      'justify-self: center;' +
-      'width: 100%;' +
-      '}' +
-      '.title {' +
-      'font-size: 1.1em;' +
-      'margin: 0;' +
-      'overflow: hidden;' +
-      'text-overflow: ellipsis;' +
-      'white-space: nowrap;' +
-      '}' +
-      '.title:hover {' +
-      'font-size: 1.1em;' +
-      'margin: 0;' +
-      'white-space: wrap;' +
-      'overflow: auto;' +
-      'text-overflow: unset;' +
-      '}'
-    this.shadowRoot.append(style, wrapper);
+    let style = shadow.appendChild (document.createElement('style'));
+    style.textContent = 
+    `
+    .price {
+      color: green;
+      font-size: 1.8em;
+      font-weight: bold;
+      margin: 0;
+    }
+    
+    .product {
+      align-items: center;
+      background-color: white;
+      border-radius: 5px;
+      display: grid;
+      grid-template-areas: 
+      'image'
+      'title'
+      'price'
+      'button';
+      grid-template-rows: 67% 11% 11% 11%;
+      height: 450px;
+      filter: drop-shadow(0px 0px 6px rgb(0,0,0,0.2));
+      margin: 0 30px 30px 0;
+      padding: 10px 20px;
+      width: 200px;
+    }
+    
+    .product > button {
+      background-color: rgb(255, 208, 0);
+      border: none;
+      border-radius: 5px;
+      color: black;
+      justify-self: center;
+      max-height: 35px;
+      padding: 8px 20px;
+      transition: 0.1s ease all;
+    }
+    
+    .product > button:hover {
+      background-color: rgb(255, 166, 0);
+      cursor: pointer;
+      transition: 0.1s ease all;
+    }
+    
+    .product > img {
+      align-self: center;
+      justify-self: center;
+      width: 100%;
+    }
+    
+    .title {
+      font-size: 1.1em;
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    .title:hover {
+      font-size: 1.1em;
+      margin: 0;
+      white-space: wrap;
+      overflow: auto;
+      text-overflow: unset;
+    }
+    `
+    this.shadowRoot.append(style, list);
   }
 
   connectedCallback() {
@@ -108,8 +118,5 @@ class ProductItem extends HTMLElement {
   }
 
 }
-
-
-
 
 customElements.define('product-item', ProductItem);
