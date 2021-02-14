@@ -23,14 +23,14 @@ class ProductItem extends HTMLElement {
     button.setAttribute('onclick', "alert('Added to Cart!')");
     button.addEventListener('click', event => {
       let element = event.target;
-      if (element.textContent === 'Add to Cart') {
+      if (element.textContent === 'Added to Cart') {
         element.textContent = 'Remove from Cart'
         let temp = document.getElementById('cart-count').textContent
         document.getElementById('cart-count').textContent = parseInt(temp) + 1
         element.setAttribute('onclick', "alert('Removed from Cart!')")
         addItem(this);
       } else {
-        event.target.textContent = 'Add to Cart'
+        event.target.textContent = 'Added to Cart'
         let temp = document.getElementById('cart-count').textContent
         if (temp > 1) {
           document.getElementById('cart-count').textContent = temp - 1
@@ -41,7 +41,7 @@ class ProductItem extends HTMLElement {
         removeItem(this);
       }
     })
-    button.textContent = 'button to Cart';
+    button.textContent = 'Added to Cart';
 
     let style = shadow.appendChild (document.createElement('style'));
     style.textContent = 
